@@ -1,12 +1,12 @@
 import SeriesTable from "@/app/components/SeriesTable";
 import { SeriesRow } from "@/app/api/series/route";
+import { queryHana } from "@/lib/hana";
 
 async function getData(): Promise<SeriesRow[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/series`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch series data");
-  const json = await res.json();
-  return json.data;
+  const schema = process.env.HANA_SCHEMA;
+  return queryHana<SeriesRow>(
+    `SELECT * FROM "${schema}"."V_DOC_NUMBERING" ORDER BY "ObjectCode", "SeriesName"`
+  );
 }
 
 export default async function Home() {

@@ -1,0 +1,36 @@
+export const SAP_DOC_NAMES: Record<string, string> = {
+  "13": "A/R Invoice",
+  "14": "A/R Credit Memo",
+  "15": "Delivery",
+  "16": "Returns",
+  "17": "Sales Order",
+  "18": "Purchase Order",
+  "19": "Goods Receipt PO",
+  "20": "Goods Return",
+  "21": "A/P Invoice",
+  "22": "A/P Credit Memo",
+  "23": "Inventory Transfer",
+  "24": "Goods Issue",
+  "25": "Goods Receipt",
+  "28": "Journal Entry",
+  "30": "Journal Voucher",
+  "46": "Correction Invoice",
+  "59": "Stock Transfer",
+  "60": "Receipt from Production",
+  "67": "Production Order",
+  "112": "Sales Quotation",
+  "132": "A/P Down Payment Request",
+  "133": "A/P Down Payment Invoice",
+  "140": "A/R Down Payment Request",
+  "163": "A/R Down Payment Invoice",
+  "178": "A/P Down Payment Invoice",
+  "203": "Inventory Counting",
+  "204": "Inventory Posting",
+  "310000001": "Quality Control",
+  "1": "Chart of Accounts",
+  "2": "Business Partner",
+};
+
+export function getDocName(objectCode: string): string {
+  return SAP_DOC_NAMES[objectCode] ?? `Object ${objectCode}`;
+}

@@ -45,16 +45,18 @@ export default function SeriesTable({ data }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Pagination top */}
-      <Pagination page={page} totalPages={totalPages} totalGroups={allGroups.length} totalRows={data.length} onChange={setPage} />
-
-      <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-        <table className="min-w-full text-sm text-left text-gray-700">
-          <thead className="bg-blue-700 text-white text-xs uppercase tracking-wider sticky top-0">
+      <div className="overflow-y-auto rounded-lg border border-gray-200 shadow-sm" style={{ maxHeight: "calc(100vh - 200px)" }}>
+        <table className="w-full text-xs text-left text-gray-700 border-separate border-spacing-0">
+          <thead>
             <tr>
-              <th className="px-4 py-3 font-semibold w-56">Document</th>
+              <th className="sticky top-0 z-20 bg-blue-700 text-white uppercase tracking-wider px-3 py-2 font-semibold w-36 border-b border-blue-600">
+                Document
+              </th>
               {COLUMNS.map((col) => (
-                <th key={col.key} className="px-4 py-3 font-semibold whitespace-nowrap">
+                <th
+                  key={col.key}
+                  className="sticky top-0 z-20 bg-blue-700 text-white uppercase tracking-wider px-2 py-2 font-semibold border-b border-blue-600"
+                >
                   {col.label}
                 </th>
               ))}
@@ -65,23 +67,23 @@ export default function SeriesTable({ data }: Props) {
               rows.map((row, rowIdx) => (
                 <tr
                   key={`${objectCode}-${rowIdx}`}
-                  className={`border-t border-gray-100 ${groupIdx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50 transition-colors`}
+                  className={`${groupIdx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50 transition-colors`}
                 >
                   {rowIdx === 0 ? (
                     <td
                       rowSpan={rows.length}
-                      className="px-4 py-3 bg-blue-50 border-r border-gray-200 align-top whitespace-nowrap"
+                      className="px-3 py-2 bg-blue-50 border-r border-b border-gray-200 align-top w-36"
                     >
-                      <div className="font-semibold text-blue-800 text-sm">
+                      <div className="font-semibold text-blue-800 text-xs leading-tight">
                         {getDocName(objectCode)}
                       </div>
-                      <div className="text-xs text-gray-400 mt-0.5">
-                        Code: {objectCode}
+                      <div className="text-gray-400 mt-0.5 text-xs">
+                        {objectCode}
                       </div>
                     </td>
                   ) : null}
                   {COLUMNS.map((col) => (
-                    <td key={col.key} className="px-4 py-2 whitespace-nowrap">
+                    <td key={col.key} className="px-2 py-1.5 border-b border-gray-100">
                       {row[col.key] !== null && row[col.key] !== undefined
                         ? String(row[col.key])
                         : <span className="text-gray-300">—</span>}

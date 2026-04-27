@@ -20,8 +20,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-400 mx-auto">
+    <main className="min-h-screen bg-gray-100 px-4 py-4">
+      <div className="w-full">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">
             Document Numbering Series

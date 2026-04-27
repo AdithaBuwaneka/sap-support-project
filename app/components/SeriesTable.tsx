@@ -38,14 +38,51 @@ function groupByObjectCode(rows: SeriesRow[]): [string, SeriesRow[]][] {
 
 export default function SeriesTable({ data }: Props) {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  const allGroups = groupByObjectCode(data);
+  const filtered = search.trim()
+    ? data.filter((row) =>
+        getDocName(row.ObjectCode).toLowerCase().includes(search.toLowerCase()) ||
+        row.ObjectCode.toLowerCase().includes(search.toLowerCase()) ||
+        row.SeriesName.toLowerCase().includes(search.toLowerCase())
+      )
+    : data;
+
+  const allGroups = groupByObjectCode(filtered);
   const totalPages = Math.ceil(allGroups.length / PAGE_SIZE);
-  const pageGroups = allGroups.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const currentPage = Math.min(page, totalPages || 1);
+  const pageGroups = allGroups.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  function handleSearch(val: string) {
+    setSearch(val);
+    setPage(1);
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="overflow-y-auto rounded-lg border border-gray-200 shadow-sm" style={{ maxHeight: "calc(100vh - 200px)" }}>
+    <div className="space-y-3">
+      {/* Search bar */}
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
+          placeholder="Search by document name, code or series..."
+          className="w-80 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {search && (
+          <button
+            onClick={() => handleSearch("")}
+            className="px-3 py-1.5 text-xs rounded-lg border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+          >
+            Clear
+          </button>
+        )}
+        <span className="text-xs text-gray-400">
+          {allGroups.length} document{allGroups.length !== 1 ? "s" : ""} found
+        </span>
+      </div>
+
+      <div className="overflow-y-auto rounded-lg border border-gray-200 shadow-sm" style={{ maxHeight: "calc(100vh - 240px)" }}>
         <table className="w-full text-xs text-left text-gray-700 border-separate border-spacing-0">
           <thead>
             <tr>
@@ -97,7 +134,7 @@ export default function SeriesTable({ data }: Props) {
       </div>
 
       {/* Pagination bottom */}
-      <Pagination page={page} totalPages={totalPages} totalGroups={allGroups.length} totalRows={data.length} onChange={setPage} />
+      <Pagination page={currentPage} totalPages={totalPages} totalGroups={allGroups.length} totalRows={filtered.length} onChange={setPage} />
     </div>
   );
 }

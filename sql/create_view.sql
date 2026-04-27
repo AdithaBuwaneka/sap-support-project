@@ -1,15 +1,15 @@
--- Run this script in SAP HANA Studio or HANA DB to create the view
+-- Run this script in SAP HANA Studio or via node script
 -- Schema: ANURA_TEST_WMS
 
 CREATE OR REPLACE VIEW "ANURA_TEST_WMS"."V_DOC_NUMBERING" AS
 SELECT
   ONNM."ObjectCode",
-  ONNM."ObjType",
+  ONNM."DocAlias",
   NNM1."Series",
   NNM1."SeriesName",
   NNM1."InitialNum",
   NNM1."NextNumber",
-  NNM1."LastNumber",
+  NNM1."LastNum",
   NNM1."BeginStr",
   NNM1."EndStr",
   NNM1."Remark",

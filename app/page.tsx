@@ -1,65 +1,51 @@
-import Image from "next/image";
+import SeriesTable from "@/app/components/SeriesTable";
+import { SeriesRow } from "@/app/api/series/route";
 
-export default function Home() {
+async function getData(): Promise<SeriesRow[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/series`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch series data");
+  const json = await res.json();
+  return json.data;
+}
+
+export default async function Home() {
+  let data: SeriesRow[] = [];
+  let error: string | null = null;
+
+  try {
+    data = await getData();
+  } catch {
+    error = "Could not connect to HANA database. Please check your connection.";
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-400 mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Document Numbering Series
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-sm text-gray-500 mt-1">
+            SAP Business One — ONNM / NNM1 — Read Only View
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        {error ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-5 py-4">
+            {error}
+          </div>
+        ) : data.length === 0 ? (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg px-5 py-4">
+            No data found.
+          </div>
+        ) : (
+          <>
+            <p className="text-xs text-gray-400 mb-3">{data.length} series rows loaded</p>
+            <SeriesTable data={data} />
+          </>
+        )}
+      </div>
+    </main>
   );
 }

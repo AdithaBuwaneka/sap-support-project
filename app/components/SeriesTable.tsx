@@ -67,7 +67,7 @@ export default function SeriesTable({ data }: Props) {
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search by document name, code or series..."
-          className="w-80 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-80 px-3 py-1.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400"
         />
         {search && (
           <button
